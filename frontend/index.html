@@ -3,223 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Таможенный калькулятор</title>
+    <title>Калькулятор таможенных пошлин</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Таможенный калькулятор</h1>
-            <p class="subtitle">Расчет платежей при импорте товаров в Узбекистан</p>
-        </header>
+    <div class="card">
+        <h1>Калькулятор таможенных пошлин</h1>
+        <p class="subtitle">Расчет импортных пошлин для Узбекистана</p>
 
-        <main>
-            <form id="calculatorForm" class="calculator-form">
-                <div class="form-section">
-                    <h2>Информация о товаре</h2>
-
-                    <div class="form-group">
-                        <label for="tnvedCode">Код ТН ВЭД *</label>
-                        <input
-                            type="text"
-                            id="tnvedCode"
-                            name="code"
-                            placeholder="Введите код (например, 8703231981)"
-                            pattern="\d{4,10}"
-                            required
-                            autocomplete="off"
-                        >
-                        <div id="codeAutocomplete" class="autocomplete-list"></div>
-                        <small>Введите минимум 4 цифры для поиска</small>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="price">Стоимость товара (инвойс) *</label>
-                            <input
-                                type="number"
-                                id="price"
-                                name="price"
-                                placeholder="10000"
-                                min="0"
-                                step="0.01"
-                                required
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="currency">Валюта</label>
-                            <select id="currency" name="currency">
-                                <option value="USD" selected>USD - Доллар США</option>
-                                <option value="EUR">EUR - Евро</option>
-                                <option value="RUB">RUB - Рубль</option>
-                                <option value="CNY">CNY - Юань</option>
-                                <option value="UZS">UZS - Сум</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="weight">Вес (кг)</label>
-                            <input
-                                type="number"
-                                id="weight"
-                                name="weight"
-                                placeholder="500"
-                                min="0"
-                                step="0.01"
-                            >
-                            <small>Для товаров со специфической ставкой</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="quantity">Количество (шт)</label>
-                            <input
-                                type="number"
-                                id="quantity"
-                                name="quantity"
-                                placeholder="1"
-                                min="0"
-                                step="1"
-                            >
-                        </div>
-                    </div>
+        <form id="calculatorForm">
+            <section class="section">
+                <div class="section-header">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    <span>ИНФОРМАЦИЯ О ТОВАРЕ</span>
                 </div>
 
-                <div class="form-section">
-                    <h2>Дополнительные расходы</h2>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="deliveryCost">Стоимость доставки</label>
-                            <input
-                                type="number"
-                                id="deliveryCost"
-                                name="delivery_cost"
-                                placeholder="500"
-                                min="0"
-                                step="0.01"
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="insuranceCost">Стоимость страховки</label>
-                            <input
-                                type="number"
-                                id="insuranceCost"
-                                name="insurance_cost"
-                                placeholder="100"
-                                min="0"
-                                step="0.01"
-                            >
-                        </div>
-                    </div>
+                <div class="field">
+                    <label>Код ТН ВЭД</label>
+                    <input type="text" id="tnvedCode" name="code" placeholder="8517120000" pattern="\d{4,10}" required autocomplete="off">
+                    <div id="codeAutocomplete" class="autocomplete-list"></div>
+                    <small>10-значный код товарной номенклатуры</small>
                 </div>
 
-                <div class="form-section">
-                    <h2>Страна происхождения</h2>
-
-                    <div class="form-group">
-                        <label for="countryOrigin">Код страны (ISO)</label>
-                        <select id="countryOrigin" name="country_origin">
-                            <option value="">Не указано</option>
-                            <option value="CN">CN - Китай</option>
-                            <option value="RU">RU - Россия</option>
-                            <option value="KZ">KZ - Казахстан</option>
-                            <option value="KR">KR - Южная Корея</option>
-                            <option value="JP">JP - Япония</option>
-                            <option value="DE">DE - Германия</option>
-                            <option value="US">US - США</option>
-                            <option value="TR">TR - Турция</option>
-                            <option value="IN">IN - Индия</option>
-                            <option value="BY">BY - Беларусь</option>
-                            <option value="KG">KG - Кыргызстан</option>
-                            <option value="TJ">TJ - Таджикистан</option>
-                            <option value="AZ">AZ - Азербайджан</option>
-                            <option value="GE">GE - Грузия</option>
-                            <option value="UA">UA - Украина</option>
-                            <option value="MD">MD - Молдова</option>
-                            <option value="AM">AM - Армения</option>
+                <div class="row">
+                    <div class="field">
+                        <label>Стоимость товара</label>
+                        <input type="number" id="price" name="price" placeholder="500" min="0" step="0.01" required>
+                    </div>
+                    <div class="field">
+                        <label>Валюта</label>
+                        <select id="currency" name="currency">
+                            <option value="USD" selected>USD - Доллар США</option>
+                            <option value="EUR">EUR - Евро</option>
+                            <option value="RUB">RUB - Рубль</option>
+                            <option value="CNY">CNY - Юань</option>
+                            <option value="UZS">UZS - Сум</option>
                         </select>
                     </div>
-
-                    <div class="form-group checkbox-group">
-                        <input
-                            type="checkbox"
-                            id="hasOriginCertificate"
-                            name="has_origin_certificate"
-                        >
-                        <label for="hasOriginCertificate">
-                            Имеется сертификат происхождения СТ-1
-                            <small>(для обнуления пошлины при режиме свободной торговли)</small>
-                        </label>
-                    </div>
                 </div>
 
-                <button type="submit" class="btn-calculate">
-                    Рассчитать
-                </button>
-            </form>
+                <div class="row">
+                    <div class="field">
+                        <label>Стоимость доставки</label>
+                        <input type="number" id="deliveryCost" name="delivery_cost" placeholder="0" min="0" step="0.01" value="0">
+                    </div>
+                    <div class="field">
+                        <label>Стоимость страховки</label>
+                        <input type="number" id="insuranceCost" name="insurance_cost" placeholder="0" min="0" step="0.01" value="0">
+                    </div>
+                </div>
+            </section>
 
-            <div id="results" class="results hidden">
+            <section class="section">
+                <div class="section-header">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    <span>СТРАНА ПРОИСХОЖДЕНИЯ</span>
+                </div>
+
+                <div class="field">
+                    <label>Код страны</label>
+                    <select id="countryOrigin" name="country_origin">
+                        <option value="">Не указано (применяется двойная ставка)</option>
+                        <option value="CN">CN - Китай</option>
+                        <option value="RU">RU - Россия</option>
+                        <option value="KZ">KZ - Казахстан</option>
+                        <option value="KR">KR - Южная Корея</option>
+                        <option value="JP">JP - Япония</option>
+                        <option value="DE">DE - Германия</option>
+                        <option value="US">US - США</option>
+                        <option value="TR">TR - Турция</option>
+                        <option value="IN">IN - Индия</option>
+                        <option value="BY">BY - Беларусь</option>
+                        <option value="KG">KG - Кыргызстан</option>
+                        <option value="TJ">TJ - Таджикистан</option>
+                        <option value="AZ">AZ - Азербайджан</option>
+                        <option value="GE">GE - Грузия</option>
+                        <option value="UA">UA - Украина</option>
+                    </select>
+                    <small>Оставьте пустым если страна неизвестна</small>
+                </div>
+
+                <div class="checkboxes">
+                    <label class="checkbox">
+                        <input type="checkbox" id="hasOriginCertificate" name="has_origin_certificate">
+                        <span>Сертификат происхождения (СТ-1)</span>
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" id="isIndividual" name="is_individual" checked>
+                        <span>Физическое лицо</span>
+                    </label>
+                </div>
+            </section>
+
+            <button type="submit" class="btn-submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Рассчитать пошлины
+            </button>
+        </form>
+
+        <div id="results" class="results hidden">
+            <div class="results-header">
                 <h2>Результаты расчета</h2>
-
-                <div class="result-info">
-                    <div class="info-row">
-                        <span class="label">Код ТН ВЭД:</span>
-                        <span id="resultCode" class="value"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Описание:</span>
-                        <span id="resultDescription" class="value"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Торговый режим:</span>
-                        <span id="resultTradeRegime" class="value"></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Курс USD:</span>
-                        <span id="resultExchangeRate" class="value"></span>
-                    </div>
+                <div class="result-meta">
+                    <span id="resultCode"></span>
+                    <span id="resultTradeRegime" class="badge"></span>
                 </div>
-
-                <table class="result-table">
-                    <thead>
-                        <tr>
-                            <th>Вид платежа</th>
-                            <th>База начисления</th>
-                            <th>Ставка</th>
-                            <th>Сумма (UZS)</th>
-                            <th>Сумма (USD)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="paymentsTableBody">
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="3"><strong>ИТОГО К УПЛАТЕ:</strong></td>
-                            <td id="totalUzs"><strong></strong></td>
-                            <td id="totalUsd"><strong></strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-
-                <div id="resultNotes" class="notes hidden"></div>
             </div>
 
-            <div id="error" class="error hidden"></div>
-        </main>
+            <p id="resultDescription" class="result-desc"></p>
 
-        <footer>
-            <p>Данные о ставках: <a href="https://lex.uz" target="_blank">lex.uz</a></p>
-            <p>Курсы валют: <a href="https://cbu.uz" target="_blank">cbu.uz</a></p>
-            <p class="disclaimer">
-                * Расчет носит справочный характер.
-                Окончательная сумма определяется таможенными органами.
-            </p>
-        </footer>
+            <div class="result-grid">
+                <div class="result-item" id="customsDutyBlock">
+                    <span class="result-label">Таможенная пошлина</span>
+                    <span class="result-value" id="customsDuty">-</span>
+                </div>
+                <div class="result-item" id="exciseBlock">
+                    <span class="result-label">Акциз</span>
+                    <span class="result-value" id="excise">-</span>
+                </div>
+                <div class="result-item" id="vatBlock">
+                    <span class="result-label">НДС</span>
+                    <span class="result-value" id="vat">-</span>
+                </div>
+                <div class="result-item" id="customsFeeBlock">
+                    <span class="result-label">Сбор за оформление</span>
+                    <span class="result-value" id="customsFee">-</span>
+                </div>
+            </div>
+
+            <div class="total-block">
+                <div class="total-row">
+                    <span>Итого к уплате:</span>
+                    <span class="total-amount">
+                        <span id="totalUzs"></span>
+                        <span class="total-usd" id="totalUsd"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div id="resultNotes" class="notes hidden"></div>
+        </div>
+
+        <div id="error" class="error hidden"></div>
     </div>
+
+    <footer>
+        <span>Курсы: <a href="https://cbu.uz" target="_blank">cbu.uz</a></span>
+        <span>Ставки: <a href="https://lex.uz" target="_blank">lex.uz</a></span>
+    </footer>
 
     <script src="/static/js/app.js"></script>
 </body>
