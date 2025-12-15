@@ -99,7 +99,7 @@ class CalculationService:
         if request.country_origin:
             country = await self._get_country(request.country_origin)
             if country:
-                if country.is_free_trade and request.has_origin_certificate:
+                if request.has_origin_certificate and (country.is_free_trade or country.is_cis):
                     duty_multiplier = 0.0
                     trade_regime = "Свободная торговля (0%)"
                 elif country.is_mfn:

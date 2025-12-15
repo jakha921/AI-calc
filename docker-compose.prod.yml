@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    image: jakha921/ai-calc-v2:latest
+    container_name: customs_calc_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL_DOCKER}
+      - DATABASE_URL_SYNC=${DATABASE_URL_SYNC_DOCKER}
+      - DEBUG=${DEBUG}
+      - SECRET_KEY=${SECRET_KEY}
+      - APP_HOST=${APP_HOST}
+      - APP_PORT=${APP_PORT}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    command: >
+      sh -c "python scripts/init_db.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  db:
+    image: postgres:15-alpine
+    container_name: customs_calc_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+

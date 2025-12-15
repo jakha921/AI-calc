@@ -4,10 +4,12 @@ services:
   db:
     image: postgres:15-alpine
     container_name: customs_calc_db
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: customs_calc
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -21,12 +23,17 @@ services:
   app:
     build: .
     container_name: customs_calc_app
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/customs_calc
-      - DATABASE_URL_SYNC=postgresql://postgres:postgres@db:5432/customs_calc
-      - DEBUG=true
+      - DATABASE_URL=${DATABASE_URL_DOCKER}
+      - DATABASE_URL_SYNC=${DATABASE_URL_SYNC_DOCKER}
+      - DEBUG=${DEBUG}
+      - SECRET_KEY=${SECRET_KEY}
+      - APP_HOST=${APP_HOST}
+      - APP_PORT=${APP_PORT}
     depends_on:
       db:
         condition: service_healthy

@@ -26,6 +26,6 @@ pydantic-settings==2.1.0
 python-dotenv==1.0.1
 aiofiles==23.2.1
 
-# Development
-pytest==8.0.0
+# Development (keep pytest <8 to satisfy pytest-asyncio constraint)
+pytest==7.4.4
 pytest-asyncio==0.23.4

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Index
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Index, UniqueConstraint
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
@@ -24,6 +24,7 @@ class TNVedCode(Base):
 
     # Indexes for search
     __table_args__ = (
+        UniqueConstraint("code", name="uq_tn_ved_codes_code"),
         Index("idx_tn_ved_code_description", "description"),
         Index("idx_tn_ved_code_level", "level"),
     )
