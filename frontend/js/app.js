@@ -128,29 +128,39 @@ async function calculate(formData) {
     }
 }
 
-// Display results
+// Display results in the new compact format
 function displayResults(data) {
     // Basic info
     document.getElementById('resultCode').textContent = data.tn_ved_code;
     document.getElementById('resultDescription').textContent = data.tn_ved_description;
     document.getElementById('resultTradeRegime').textContent = data.trade_regime;
-    document.getElementById('resultExchangeRate').textContent = `${formatNumber(data.exchange_rate, 2)} UZS (${data.exchange_rate_date})`;
 
-    // Payments table
-    const tbody = document.getElementById('paymentsTableBody');
-    tbody.innerHTML = data.payments.map(payment => `
-        <tr>
-            <td>${payment.name_ru}</td>
-            <td>${formatNumber(payment.base_amount)} UZS</td>
-            <td>${payment.rate}</td>
-            <td>${formatNumber(payment.amount_uzs)} UZS</td>
-            <td>${formatNumber(payment.amount_usd, 2)} USD</td>
-        </tr>
-    `).join('');
+    // Map payment types to display elements
+    const paymentMap = {
+        'customs_duty': { el: 'customsDuty', block: 'customsDutyBlock', label: 'Таможенная пошлина' },
+        'excise': { el: 'excise', block: 'exciseBlock', label: 'Акциз' },
+        'vat': { el: 'vat', block: 'vatBlock', label: 'НДС' },
+        'customs_fee': { el: 'customsFee', block: 'customsFeeBlock', label: 'Сбор за оформление' }
+    };
+
+    // Reset all values
+    Object.values(paymentMap).forEach(({ el, block }) => {
+        document.getElementById(el).textContent = '-';
+        document.getElementById(block).style.display = 'block';
+    });
+
+    // Update payment values
+    data.payments.forEach(payment => {
+        const mapping = paymentMap[payment.type];
+        if (mapping) {
+            const valueEl = document.getElementById(mapping.el);
+            valueEl.textContent = `${formatNumber(payment.amount_uzs)} сум`;
+        }
+    });
 
     // Totals
-    document.getElementById('totalUzs').innerHTML = `<strong>${formatNumber(data.total_uzs)} UZS</strong>`;
-    document.getElementById('totalUsd').innerHTML = `<strong>${formatNumber(data.total_usd, 2)} USD</strong>`;
+    document.getElementById('totalUzs').textContent = `${formatNumber(data.total_uzs)} сум`;
+    document.getElementById('totalUsd').textContent = `≈ ${formatNumber(data.total_usd, 2)} USD`;
 
     // Notes
     const notesDiv = document.getElementById('resultNotes');
@@ -163,6 +173,9 @@ function displayResults(data) {
 
     // Show results
     resultsDiv.classList.remove('hidden');
+
+    // Scroll to results
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // Form submit handler
@@ -215,7 +228,7 @@ codeInput.addEventListener('focus', (e) => {
 
 // Close autocomplete on click outside
 document.addEventListener('click', (e) => {
-    if (!e.target.closest('.form-group')) {
+    if (!e.target.closest('.field')) {
         autocompleteList.classList.remove('active');
     }
 });
